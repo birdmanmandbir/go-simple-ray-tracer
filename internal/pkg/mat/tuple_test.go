@@ -47,7 +47,46 @@ func TestSub(t *testing.T) {
 }
 
 func TestNegate(t *testing.T) {
-	expect := NewTuple4([]float64{-1, 2, -3, 4})
-	input := Negate(NewTuple4([]float64{1, -2, 3, -4}))
+	expect := NewTuple4(-1, 2, -3, 4)
+	input := Negate(NewTuple4(1, -2, 3, -4))
 	assert.Equal(t, expect, input)
+}
+
+func TestMultiplyByScalar(t *testing.T) {
+	type args struct {
+		t      *Tuple4
+		scalar float64
+	}
+	tests := []struct {
+		name string
+		args args
+		want *Tuple4
+	}{
+		{name: "scalar", args: args{t: NewTuple4(1, -2, 3, -4), scalar: 3.5}, want: NewTuple4(3.5, -7, 10.5, -14)},
+		{name: "fraction", args: args{t: NewTuple4(1, -2, 3, -4), scalar: 0.5}, want: NewTuple4(0.5, -1, 1.5, -2)},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, MultiplyByScalar(tt.args.t, tt.args.scalar), "MultiplyByScalar(%v, %v)", tt.args.t, tt.args.scalar)
+		})
+	}
+}
+
+func TestDivideByScalar(t *testing.T) {
+	type args struct {
+		t      *Tuple4
+		scalar float64
+	}
+	tests := []struct {
+		name string
+		args args
+		want *Tuple4
+	}{
+		{name: "divide", args: args{t: NewTuple4(1, -2, 3, -4), scalar: 2}, want: NewTuple4(0.5, -1, 1.5, -2)},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, DivideByScalar(tt.args.t, tt.args.scalar), "DivideByScalar(%v, %v)", tt.args.t, tt.args.scalar)
+		})
+	}
 }
