@@ -9,3 +9,6 @@ test:
 
 fmt:
 	go fmt ./...
+
+doc:
+	go-plantuml generate -r -o doc.puml
