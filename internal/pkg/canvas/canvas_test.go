@@ -55,8 +55,7 @@ func TestCanvas_ToPPM(t *testing.T) {
 	c.WritePixel(0, 0, color1)
 	c.WritePixel(2, 1, color2)
 	c.WritePixel(4, 2, color3)
-	want :=
-		`P3
+	want := `P3
 5 3
 255
 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0
@@ -64,4 +63,30 @@ func TestCanvas_ToPPM(t *testing.T) {
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255
 `
 	assert.Equal(t, want, c.ToPPM())
+}
+
+func TestCanvas_ToPPMSplitWithLongLines(t *testing.T) {
+	c := NewCanvas(10, 2)
+	color := mat.NewColor(1, 0.8, 0.6)
+	for i := 0; i < c.W; i++ {
+		for j := 0; j < c.H; j++ {
+			c.WritePixel(i, j, color)
+		}
+	}
+	want := `P3
+10 2
+255
+255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204
+153 255 204 153 255 204 153 255 204 153 255 204 153
+255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204
+153 255 204 153 255 204 153 255 204 153 255 204 153
+`
+	assert.Equal(t, want, c.ToPPM())
+}
+
+func TestCanvas_ToPPMTerminatedByNewLine(t *testing.T) {
+	c := NewCanvas(5, 3)
+	ppm := c.ToPPM()
+	want := "\n"[0]
+	assert.Equal(t, want, ppm[len(ppm)-1])
 }
