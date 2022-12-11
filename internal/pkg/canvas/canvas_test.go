@@ -55,8 +55,13 @@ func TestCanvas_ToPPM(t *testing.T) {
 	c.WritePixel(0, 0, color1)
 	c.WritePixel(2, 1, color2)
 	c.WritePixel(4, 2, color3)
-	ppm := strings.Split(c.ToPPM(), "\n")
-	middle := strings.Join(ppm[3:6], "\n")
-	want := "255 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 128 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 255\n"
-	assert.Equal(t, want, middle)
+	want :=
+		`P3
+5 3
+255
+255 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 128 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 255
+`
+	assert.Equal(t, want, c.ToPPM())
 }

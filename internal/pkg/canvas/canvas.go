@@ -39,18 +39,17 @@ func (c *Canvas) WritePixel(x int, y int, color *mat.Tuple4) {
 func (c *Canvas) ToPPM() string {
 	header := fmt.Sprintf("P3\n%d %d\n255\n", c.W, c.H)
 	result := header
-	colNumber := 0
-	for i := 0; i < c.W; i++ {
+	for i := 0; i < c.H; i++ {
 		buf := strings.Builder{}
-		for j := 0; j < c.H; j++ {
-			clamped := clamp(c.ColorAt(i, j))
+		colNumber := 0
+		for j := 0; j < c.W; j++ {
+			clamped := clamp(c.ColorAt(j, i))
 			writeColorToBuffer(clamped, &buf, &colNumber)
 		}
 		out := buf.String()
 		out = strings.TrimSuffix(out, " ")
 		result += out + "\n"
 	}
-	result = strings.TrimSuffix(result, "\n")
 	return result
 }
 
@@ -72,13 +71,14 @@ func clamp(color *mat.Tuple4) *mat.Tuple4 {
 func writeColorToBuffer(color *mat.Tuple4, buf *strings.Builder, colNumber *int) {
 	for i := 0; i < 3; i++ {
 		// Every color need 3 space(max), for example 255
+		colorStr := strconv.Itoa(int(color.Get(i)))
 		if *colNumber+3 > MaxLineWidth {
 			buf.WriteString("\n")
-			buf.WriteString(strconv.Itoa(int(color.Get(i))))
+			buf.WriteString(colorStr)
 			buf.WriteString(" ")
 			*colNumber = 3
 		} else {
-			buf.WriteString(strconv.Itoa(int(color.Get(i))))
+			buf.WriteString(colorStr)
 			if *colNumber+6 < MaxLineWidth {
 				buf.WriteString(" ")
 			}
