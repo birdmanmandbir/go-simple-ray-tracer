@@ -3,6 +3,7 @@ package canvas
 import (
 	"github.com/birdmanmandbir/go-simple-ray-tracer/internal/pkg/mat"
 	"github.com/stretchr/testify/assert"
+	"strings"
 	"testing"
 )
 
@@ -33,32 +34,29 @@ func TestNewCanvas(t *testing.T) {
 }
 
 func TestCanvas_WritePixel(t *testing.T) {
-	type fields struct {
-		W      int
-		H      int
-		Pixels [][]*mat.Tuple4
-	}
-	type args struct {
-		x     int
-		y     int
-		color *mat.Tuple4
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		args   args
-	}{
-		{fields: fields{W: 10, H: 20}, args: args{x: 2, y: 3, color: mat.NewColor(1, 0, 0)}},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			c := &Canvas{
-				W:      tt.fields.W,
-				H:      tt.fields.H,
-				Pixels: tt.fields.Pixels,
-			}
-			c.WritePixel(tt.args.x, tt.args.y, tt.args.color)
-			assert.Equal(t, mat.NewColor(1, 0, 0), c.ColorAt(tt.args.x, tt.args.y))
-		})
-	}
+	red := mat.NewColor(1, 0, 0)
+	c := NewCanvas(10, 20)
+	c.WritePixel(2, 3, red)
+	assert.Equal(t, red, c.ColorAt(2, 3))
+}
+
+func TestCanvas_ToPPMHeader(t *testing.T) {
+	c := NewCanvas(5, 3)
+	ppm := strings.Join(strings.Split(c.ToPPM(), "\n")[0:3], "\n")
+	expected := "P3\n5 3\n255"
+	assert.Equal(t, expected, ppm)
+}
+
+func TestCanvas_ToPPM(t *testing.T) {
+	c := NewCanvas(5, 3)
+	color1 := mat.NewColor(1.5, 0, 0)
+	color2 := mat.NewColor(0, 0.5, 0)
+	color3 := mat.NewColor(-0.5, 0, 1)
+	c.WritePixel(0, 0, color1)
+	c.WritePixel(2, 1, color2)
+	c.WritePixel(4, 2, color3)
+	ppm := strings.Split(c.ToPPM(), "\n")
+	middle := strings.Join(ppm[3:6], "\n")
+	want := "255 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 128 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 255\n"
+	assert.Equal(t, want, middle)
 }
