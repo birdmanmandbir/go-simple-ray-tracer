@@ -2,20 +2,32 @@ package demo
 
 import (
 	"fmt"
+	"github.com/birdmanmandbir/go-simple-ray-tracer/internal/pkg/canvas"
 	"github.com/birdmanmandbir/go-simple-ray-tracer/internal/pkg/mat"
+	"os"
+	"path"
 )
 
+const OutputDir = "./output"
+
 func ProjectileDemo() {
-	p := newProjectile(mat.NewPoint(0, 1, 0), mat.Normalize(*mat.NewVector(1, 5, 0)))
+	velocityScale := 11.25
+	velocity := mat.MultiplyByScalar(*mat.Normalize(*mat.NewVector(1, 1.8, 0)), velocityScale)
+	p := newProjectile(mat.NewPoint(0, 1, 0), velocity)
 	e := newEnvironment(mat.NewVector(0, -0.1, 0), mat.NewVector(-0.01, 0, 0))
-	for {
+	c := canvas.NewCanvas(900, 550)
+	pointColor := mat.NewColor(1, 0.2, 0.1)
+	for p.position.GetY() > 0 {
 		p = tick(*e, *p)
+		c.WritePixel(int(p.position.GetX()), c.H-int(p.position.GetY()), pointColor)
 		fmt.Printf("The Object is at %v at height %v with velocity %v\n", *p.position, p.position.GetY(), *p.velocity)
-		if p.position.GetY() <= 0 {
-			break
-		}
 	}
 	println("Falling to ground!")
+	_ = os.Mkdir(OutputDir, os.FileMode(0755))
+	err := os.WriteFile(path.Join(OutputDir, "ProjectileDemoPicture.ppm"), []byte(c.ToPPM()), os.FileMode(0755))
+	if err != nil {
+		fmt.Printf("Write file error: %v", err)
+	}
 }
 
 type Projectile struct {
