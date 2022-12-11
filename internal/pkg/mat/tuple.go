@@ -118,3 +118,11 @@ func Cross(t1, t2 Tuple4) *Tuple4 {
 	t3.Data[2] = t1.GetX()*t2.GetY() - t1.GetY()*t2.GetX()
 	return t3
 }
+
+func Hadamard(t1, t2 Tuple4) *Tuple4 {
+	t3 := NewEmptyTuple4()
+	for i := 0; i < 4; i++ {
+		t3.Data[i] = t1.Data[i] * t2.Data[i]
+	}
+	return t3
+}
