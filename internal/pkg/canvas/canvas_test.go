@@ -87,6 +87,6 @@ func TestCanvas_ToPPMSplitWithLongLines(t *testing.T) {
 func TestCanvas_ToPPMTerminatedByNewLine(t *testing.T) {
 	c := NewCanvas(5, 3)
 	ppm := c.ToPPM()
-	want := "\n"[0]
-	assert.Equal(t, want, ppm[len(ppm)-1])
+	want := "\n"
+	assert.Equal(t, want, string(ppm[len(ppm)-1]))
 }
