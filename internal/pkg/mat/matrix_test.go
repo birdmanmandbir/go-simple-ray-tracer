@@ -95,3 +95,60 @@ func TestMatrix_Equals(t *testing.T) {
 		})
 	}
 }
+
+func TestMultiplyMatrix4x4(t *testing.T) {
+	type args struct {
+		m1 Matrix
+		m2 Matrix
+	}
+	tests := []struct {
+		name string
+		args args
+		want *Matrix
+	}{
+		{args: args{m1: *NewMatrixByRaw([][]float64{
+			{1, 2, 3, 4},
+			{5, 6, 7, 8},
+			{9, 8, 7, 6},
+			{5, 4, 3, 2},
+		}), m2: *NewMatrixByRaw([][]float64{
+			{-2, 1, 2, 3},
+			{3, 2, 1, -1},
+			{4, 3, 6, 5},
+			{1, 2, 7, 8},
+		})}, want: NewMatrixByRaw([][]float64{
+			{20, 22, 50, 48},
+			{44, 54, 114, 108},
+			{40, 58, 110, 102},
+			{16, 26, 46, 42},
+		})}}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, MultiplyMatrix4x4(tt.args.m1, tt.args.m2), "MultiplyMatrix4x4(%v, %v)", tt.args.m1, tt.args.m2)
+		})
+	}
+}
+
+func TestMultiplyMatrixByTuple(t *testing.T) {
+	type args struct {
+		m Matrix
+		t Tuple4
+	}
+	tests := []struct {
+		name string
+		args args
+		want *Tuple4
+	}{
+		{args: args{m: *NewMatrixByRaw([][]float64{
+			{1, 2, 3, 4},
+			{2, 4, 4, 2},
+			{8, 6, 4, 1},
+			{0, 0, 0, 1},
+		}), t: *NewTuple4ByRaw([]float64{1, 2, 3, 1})}, want: NewTuple4ByRaw([]float64{18, 24, 33, 1})},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, MultiplyMatrixByTuple(tt.args.m, tt.args.t), "MultiplyMatrixByTuple(%v, %v)", tt.args.m, tt.args.t)
+		})
+	}
+}

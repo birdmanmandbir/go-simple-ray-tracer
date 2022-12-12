@@ -6,35 +6,39 @@ type Tuple4 struct {
 	Data []float64
 }
 
-func (t Tuple4) IsPoint() bool {
+func (t *Tuple4) IsPoint() bool {
 	return t.Get(3) == 1.0
 }
 
-func (t Tuple4) IsVector() bool {
+func (t *Tuple4) IsVector() bool {
 	return t.Get(3) == 0.0
 }
 
-func (t Tuple4) Get(row int) float64 {
+func (t *Tuple4) Set(row int, val float64) {
+	t.Data[row] = val
+}
+
+func (t *Tuple4) Get(row int) float64 {
 	return t.Data[row]
 }
 
-func (t Tuple4) GetX() float64 {
+func (t *Tuple4) GetX() float64 {
 	return t.Data[0]
 }
 
-func (t Tuple4) GetY() float64 {
+func (t *Tuple4) GetY() float64 {
 	return t.Data[1]
 }
 
-func (t Tuple4) GetZ() float64 {
+func (t *Tuple4) GetZ() float64 {
 	return t.Data[2]
 }
 
-func (t Tuple4) GetW() float64 {
+func (t *Tuple4) GetW() float64 {
 	return t.Data[3]
 }
 
-func (t Tuple4) Equals(o Tuple4) bool {
+func (t *Tuple4) Equals(o Tuple4) bool {
 	return AlmostEqualFloat64(t.GetX(), o.GetX()) &&
 		AlmostEqualFloat64(t.GetY(), o.GetY()) &&
 		AlmostEqualFloat64(t.GetZ(), o.GetZ()) &&
@@ -47,6 +51,10 @@ func NewPoint(x, y, z float64) *Tuple4 {
 
 func NewVector(x, y, z float64) *Tuple4 {
 	return NewTuple4(x, y, z, 0.0)
+}
+
+func NewTuple4ByRaw(raw []float64) *Tuple4 {
+	return &Tuple4{Data: raw}
 }
 
 func NewTuple4(x, y, z, w float64) *Tuple4 {
