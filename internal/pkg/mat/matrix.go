@@ -90,3 +90,11 @@ func MultiplyMatrixByTuple(m Matrix, t Tuple4) *Tuple4 {
 	}
 	return t1
 }
+
+func NewIdentityMatrix(size int) *Matrix {
+	m := NewMatrix(size)
+	for i := 0; i < size; i++ {
+		m.Set(i, i, 1)
+	}
+	return m
+}

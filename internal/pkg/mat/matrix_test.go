@@ -152,3 +152,20 @@ func TestMultiplyMatrixByTuple(t *testing.T) {
 		})
 	}
 }
+
+func TestNewIdentityMatrixMultiplyMatrix(t *testing.T) {
+	m1 := NewMatrixByRaw([][]float64{
+		{0, 1, 2, 4},
+		{1, 2, 4, 8},
+		{2, 4, 8, 16},
+		{4, 8, 16, 32},
+	})
+	mi := NewIdentityMatrix(4)
+	assert.Equal(t, m1, MultiplyMatrix4x4(*m1, *mi))
+}
+
+func TestNewIdentityMatrixMultiplyTuple(t *testing.T) {
+	mi := NewIdentityMatrix(4)
+	tuple := NewTuple4ByRaw([]float64{1, 2, 3, 4})
+	assert.Equal(t, tuple, MultiplyMatrixByTuple(*mi, *tuple))
+}
