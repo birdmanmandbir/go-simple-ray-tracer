@@ -128,7 +128,7 @@ func TestNormalize(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Truef(t, TupleEquals(*tt.want, *Normalize(tt.args.t)), "Normalize(%v)", tt.args.t)
+			assert.Truef(t, tt.want.Equals(*Normalize(tt.args.t)), "Normalize(%v)", tt.args.t)
 		})
 	}
 }

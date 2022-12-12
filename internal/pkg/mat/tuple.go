@@ -34,6 +34,13 @@ func (t Tuple4) GetW() float64 {
 	return t.Data[3]
 }
 
+func (t Tuple4) Equals(o Tuple4) bool {
+	return AlmostEqualFloat64(t.GetX(), o.GetX()) &&
+		AlmostEqualFloat64(t.GetY(), o.GetY()) &&
+		AlmostEqualFloat64(t.GetZ(), o.GetZ()) &&
+		AlmostEqualFloat64(t.GetW(), o.GetW())
+}
+
 func NewPoint(x, y, z float64) *Tuple4 {
 	return NewTuple4(x, y, z, 1.0)
 }
@@ -95,13 +102,6 @@ func Normalize(t Tuple4) *Tuple4 {
 		t1.Data[i] = t.Data[i] / magnitude
 	}
 	return t1
-}
-
-func TupleEquals(t1, t2 Tuple4) bool {
-	return AlmostEqualFloat64(t1.Data[0], t2.Data[0]) &&
-		AlmostEqualFloat64(t1.Data[1], t2.Data[1]) &&
-		AlmostEqualFloat64(t1.Data[2], t2.Data[2]) &&
-		AlmostEqualFloat64(t1.Data[3], t2.Data[3])
 }
 
 func Dot(t1, t2 Tuple4) float64 {

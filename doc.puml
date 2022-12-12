@@ -1,8 +1,48 @@
 @startuml
+package demo{
+annotation demo {
+-const OutputDir: STRING
+
++ProjectileDemo()
+-newEnvironment(gravity *Tuple4, wind *Tuple4): *Environment
+-newProjectile(position *Tuple4, velocity *Tuple4): *Projectile
+-tick(env Environment, proj Projectile): *Projectile
+}
+class Projectile {
+-position: *Tuple4
+-velocity: *Tuple4
+
+}
+class Environment {
+-gravity: *Tuple4
+-wind: *Tuple4
+
+}
+}
+package internal\pkg\canvas{
+annotation internal\pkg\canvas {
+-const MaxColor: FLOAT
+-const MaxLineWidth: INT
+
+-clamp(color *Tuple4): *Tuple4
+-writeColorToBuffer(color *Tuple4, buf *Builder, colNumber *int)
++NewCanvas(width int, height int): *Canvas
+}
+class Canvas {
++W: int
++H: int
++Pixels: [][]*Tuple4
++ColorAt(x int, y int): *Tuple4
+-checkWritePixel(x int, y int): bool
++WritePixel(x int, y int, color *Tuple4)
++ToPPM(): string
+}
+}
 package internal\pkg\mat{
 annotation internal\pkg\mat {
 -const EPSILON: FLOAT
 
++NewColor(r float64, g float64, b float64): *Tuple4
 +AlmostEqualFloat64(a float64, b float64): bool
 +NewPoint(x float64, y float64, z float64): *Tuple4
 +NewVector(x float64, y float64, z float64): *Tuple4
@@ -15,9 +55,9 @@ annotation internal\pkg\mat {
 +DivideByScalar(t Tuple4, scalar float64): *Tuple4
 +Magnitude(t Tuple4): float64
 +Normalize(t Tuple4): *Tuple4
-+TupleEquals(t1 Tuple4, t2 Tuple4): bool
 +Dot(t1 Tuple4, t2 Tuple4): float64
 +Cross(t1 Tuple4, t2 Tuple4): *Tuple4
++Hadamard(t1 Tuple4, t2 Tuple4): *Tuple4
 }
 class Tuple4 {
 +Data: []float64
@@ -28,6 +68,7 @@ class Tuple4 {
 +GetY(): float64
 +GetZ(): float64
 +GetW(): float64
++Equals(o Tuple4): bool
 }
 }
 package .{
@@ -37,6 +78,7 @@ annotation . {
 -main()
 }
 }
-
+"Projectile" --> "Tuple4"
+"Environment" --> "Tuple4"
 
 @enduml
