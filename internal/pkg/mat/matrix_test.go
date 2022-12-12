@@ -169,3 +169,39 @@ func TestNewIdentityMatrixMultiplyTuple(t *testing.T) {
 	tuple := NewTuple4ByRaw([]float64{1, 2, 3, 4})
 	assert.Equal(t, tuple, MultiplyMatrixByTuple(*mi, *tuple))
 }
+
+func BenchmarkMultiplyMatrix4x4(b *testing.B) {
+	m1 := NewMatrixByRaw([][]float64{
+		{1, 2, 3, 4},
+		{5, 6, 7, 8},
+		{9, 8, 7, 6},
+		{5, 4, 3, 2},
+	})
+	m2 := NewMatrixByRaw([][]float64{
+		{-2, 1, 2, 3},
+		{3, 2, 1, -1},
+		{4, 3, 6, 5},
+		{1, 2, 7, 8},
+	})
+	for i := 0; i < b.N; i++ {
+		MultiplyMatrix4x4(*m1, *m2)
+	}
+}
+
+func BenchmarkMultiplyMatrix4x4Pointer(b *testing.B) {
+	m1 := NewMatrixByRaw([][]float64{
+		{1, 2, 3, 4},
+		{5, 6, 7, 8},
+		{9, 8, 7, 6},
+		{5, 4, 3, 2},
+	})
+	m2 := NewMatrixByRaw([][]float64{
+		{-2, 1, 2, 3},
+		{3, 2, 1, -1},
+		{4, 3, 6, 5},
+		{1, 2, 7, 8},
+	})
+	for i := 0; i < b.N; i++ {
+		MultiplyMatrix4x4Pointer(m1, m2)
+	}
+}

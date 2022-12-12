@@ -82,6 +82,18 @@ func MultiplyMatrix4x4(m1 Matrix, m2 Matrix) *Matrix {
 	return m3
 }
 
+func MultiplyMatrix4x4Pointer(m1 *Matrix, m2 *Matrix) *Matrix {
+	m3 := NewMatrix(4)
+	for i := 0; i < 4; i++ {
+		row := GetRowTupleOfMatrix4x4(*m1, i)
+		for j := 0; j < 4; j++ {
+			col := GetColTupleOfMatrix4x4(*m2, j)
+			m3.Set(i, j, Dot(*row, *col))
+		}
+	}
+	return m3
+}
+
 func MultiplyMatrixByTuple(m Matrix, t Tuple4) *Tuple4 {
 	t1 := NewEmptyTuple4()
 	for i := 0; i < 4; i++ {
